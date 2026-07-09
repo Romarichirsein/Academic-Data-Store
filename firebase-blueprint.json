@@ -1,0 +1,85 @@
+{
+  "entities": {
+    "students": {
+      "title": "Student",
+      "description": "Information sur l'élève",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "name": { "type": "string" },
+        "schoolId": { "type": "string" },
+        "classId": { "type": "string" }
+      },
+      "required": ["id", "name", "schoolId"]
+    },
+    "classes": {
+      "title": "SchoolClass",
+      "description": "Division ou classe scolaire",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "name": { "type": "string" },
+        "schoolId": { "type": "string" }
+      },
+      "required": ["id", "name", "schoolId"]
+    },
+    "sheets": {
+      "title": "AttendanceSheet",
+      "description": "Feuille d'appel de présence",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "schoolId": { "type": "string" },
+        "classId": { "type": "string" },
+        "date": { "type": "string" }
+      },
+      "required": ["id", "schoolId", "classId", "date"]
+    },
+    "records": {
+      "title": "AttendanceRecord",
+      "description": "Enregistrement de présence d'un élève",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "sheetId": { "type": "string" },
+        "studentId": { "type": "string" },
+        "status": { "type": "string" }
+      },
+      "required": ["id", "sheetId", "studentId", "status"]
+    },
+    "evaluations": {
+      "title": "Evaluation",
+      "description": "Épreuve d'évaluation de notes",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "schoolId": { "type": "string" },
+        "classId": { "type": "string" },
+        "status": { "type": "string" }
+      },
+      "required": ["id", "schoolId", "classId", "status"]
+    }
+  },
+  "firestore": {
+    "students": {
+      "schema": "students",
+      "description": "Collection des élèves"
+    },
+    "classes": {
+      "schema": "classes",
+      "description": "Collection des classes"
+    },
+    "sheets": {
+      "schema": "sheets",
+      "description": "Collection des feuilles d'appel"
+    },
+    "records": {
+      "schema": "records",
+      "description": "Collection des enregistrements de présence"
+    },
+    "evaluations": {
+      "schema": "evaluations",
+      "description": "Collection des épreuves d'évaluation"
+    }
+  }
+}
