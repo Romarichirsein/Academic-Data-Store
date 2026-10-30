@@ -24,7 +24,12 @@ import {
   AttendanceRecord, 
   Evaluation, 
   Mark, 
-  AuditLog 
+  AuditLog,
+  Subject,
+  Teacher,
+  ClassSubject,
+  AdminRole,
+  StaffMember
 } from '../types';
 import { 
   INITIAL_SCHOOLS, 
@@ -33,7 +38,12 @@ import {
   INITIAL_ATTENDANCE_SHEETS, 
   INITIAL_ATTENDANCE_RECORDS, 
   INITIAL_EVALUATIONS, 
-  INITIAL_MARKS 
+  INITIAL_MARKS,
+  SUBJECTS,
+  TEACHERS,
+  CLASS_SUBJECTS,
+  INITIAL_ROLES,
+  INITIAL_STAFF
 } from '../data/mockData';
 
 export enum OperationType {
@@ -137,6 +147,36 @@ export async function seedDatabaseIfEmpty() {
         batch.set(ref, m);
       }
 
+      // Seed Subjects
+      for (const s of SUBJECTS) {
+        const ref = doc(db, 'subjects', s.id);
+        batch.set(ref, { ...s, schoolId: 'school-lby' });
+      }
+
+      // Seed Teachers
+      for (const t of TEACHERS) {
+        const ref = doc(db, 'teachers', t.id);
+        batch.set(ref, { ...t, schoolId: 'school-lby' });
+      }
+
+      // Seed ClassSubjects
+      for (const cs of CLASS_SUBJECTS) {
+        const ref = doc(db, 'classSubjects', cs.id);
+        batch.set(ref, { ...cs, schoolId: 'school-lby' });
+      }
+
+      // Seed Roles
+      for (const role of INITIAL_ROLES) {
+        const ref = doc(db, 'roles', role.id);
+        batch.set(ref, role);
+      }
+
+      // Seed Staff Members
+      for (const staff of INITIAL_STAFF) {
+        const ref = doc(db, 'staff', staff.id);
+        batch.set(ref, staff);
+      }
+
       // Seed some initial Audit Logs
       const initialLogs: AuditLog[] = [
         {
@@ -183,6 +223,11 @@ export function startFirebaseSync(setters: {
   setEvaluations: React.Dispatch<React.SetStateAction<Evaluation[]>>;
   setMarks: React.Dispatch<React.SetStateAction<Mark[]>>;
   setAuditLogs: React.Dispatch<React.SetStateAction<AuditLog[]>>;
+  setSubjects: React.Dispatch<React.SetStateAction<Subject[]>>;
+  setTeachers: React.Dispatch<React.SetStateAction<Teacher[]>>;
+  setClassSubjects: React.Dispatch<React.SetStateAction<ClassSubject[]>>;
+  setRoles: React.Dispatch<React.SetStateAction<AdminRole[]>>;
+  setStaff: React.Dispatch<React.SetStateAction<StaffMember[]>>;
 }) {
   const unsubscribes: (() => void)[] = [];
 
@@ -326,6 +371,97 @@ export function startFirebaseSync(setters: {
     )
   );
 
+  // 9. Subjects Listener
+  unsubscribes.push(
+    onSnapshot(
+      collection(db, 'subjects'),
+      (snapshot) => {
+        const data: Subject[] = [];
+        snapshot.forEach((doc) => {
+          data.push({ ...doc.data() as Subject, id: doc.id });
+        });
+        if (data.length > 0) {
+          setters.setSubjects(data);
+        }
+      },
+      (error) => {
+        handleFirestoreError(error, OperationType.LIST, 'subjects');
+      }
+    )
+  );
+
+  // 10. Teachers Listener
+  unsubscribes.push(
+    onSnapshot(
+      collection(db, 'teachers'),
+      (snapshot) => {
+        const data: Teacher[] = [];
+        snapshot.forEach((doc) => {
+          data.push({ ...doc.data() as Teacher, id: doc.id });
+        });
+        if (data.length > 0) {
+          setters.setTeachers(data);
+        }
+      },
+      (error) => {
+        handleFirestoreError(error, OperationType.LIST, 'teachers');
+      }
+    )
+  );
+
+  // 11. ClassSubjects Listener
+  unsubscribes.push(
+    onSnapshot(
+      collection(db, 'classSubjects'),
+      (snapshot) => {
+        const data: ClassSubject[] = [];
+        snapshot.forEach((doc) => {
+          data.push({ ...doc.data() as ClassSubject, id: doc.id });
+        });
+        if (data.length > 0) {
+          setters.setClassSubjects(data);
+        }
+      },
+      (error) => {
+        handleFirestoreError(error, OperationType.LIST, 'classSubjects');
+      }
+    )
+  );
+
+  // 12. Roles Listener
+  unsubscribes.push(
+    onSnapshot(
+      collection(db, 'roles'),
+      (snapshot) => {
+        const data: AdminRole[] = [];
+        snapshot.forEach((doc) => {
+          data.push({ ...doc.data() as AdminRole, id: doc.id });
+        });
+        setters.setRoles(data);
+      },
+      (error) => {
+        handleFirestoreError(error, OperationType.LIST, 'roles');
+      }
+    )
+  );
+
+  // 13. Staff Listener
+  unsubscribes.push(
+    onSnapshot(
+      collection(db, 'staff'),
+      (snapshot) => {
+        const data: StaffMember[] = [];
+        snapshot.forEach((doc) => {
+          data.push({ ...doc.data() as StaffMember, id: doc.id });
+        });
+        setters.setStaff(data);
+      },
+      (error) => {
+        handleFirestoreError(error, OperationType.LIST, 'staff');
+      }
+    )
+  );
+
   return () => {
     unsubscribes.forEach(unsub => unsub());
   };
@@ -401,5 +537,101 @@ export async function dbSaveAuditLog(log: AuditLog) {
     await setDoc(doc(db, 'auditLogs', log.id), log);
   } catch (error) {
     handleFirestoreError(error, OperationType.WRITE, `auditLogs/${log.id}`);
+  }
+}
+
+export async function dbSaveSubject(subject: Subject) {
+  try {
+    await setDoc(doc(db, 'subjects', subject.id), subject);
+  } catch (error) {
+    handleFirestoreError(error, OperationType.WRITE, `subjects/${subject.id}`);
+  }
+}
+
+export async function dbDeleteSubject(subjectId: string) {
+  try {
+    await deleteDoc(doc(db, 'subjects', subjectId));
+  } catch (error) {
+    handleFirestoreError(error, OperationType.DELETE, `subjects/${subjectId}`);
+  }
+}
+
+export async function dbSaveTeacher(teacher: Teacher) {
+  try {
+    await setDoc(doc(db, 'teachers', teacher.id), teacher);
+  } catch (error) {
+    handleFirestoreError(error, OperationType.WRITE, `teachers/${teacher.id}`);
+  }
+}
+
+export async function dbDeleteTeacher(teacherId: string) {
+  try {
+    await deleteDoc(doc(db, 'teachers', teacherId));
+  } catch (error) {
+    handleFirestoreError(error, OperationType.DELETE, `teachers/${teacherId}`);
+  }
+}
+
+export async function dbSaveClassSubject(cs: ClassSubject) {
+  try {
+    await setDoc(doc(db, 'classSubjects', cs.id), cs);
+  } catch (error) {
+    handleFirestoreError(error, OperationType.WRITE, `classSubjects/${cs.id}`);
+  }
+}
+
+export async function dbDeleteClassSubject(csId: string) {
+  try {
+    await deleteDoc(doc(db, 'classSubjects', csId));
+  } catch (error) {
+    handleFirestoreError(error, OperationType.DELETE, `classSubjects/${csId}`);
+  }
+}
+
+export async function dbSaveRole(role: AdminRole) {
+  try {
+    await setDoc(doc(db, 'roles', role.id), role);
+  } catch (error) {
+    handleFirestoreError(error, OperationType.WRITE, `roles/${role.id}`);
+  }
+}
+
+export async function dbDeleteRole(roleId: string) {
+  try {
+    await deleteDoc(doc(db, 'roles', roleId));
+  } catch (error) {
+    handleFirestoreError(error, OperationType.DELETE, `roles/${roleId}`);
+  }
+}
+
+export async function dbSaveStaff(staff: StaffMember) {
+  try {
+    await setDoc(doc(db, 'staff', staff.id), staff);
+  } catch (error) {
+    handleFirestoreError(error, OperationType.WRITE, `staff/${staff.id}`);
+  }
+}
+
+export async function dbDeleteStaff(staffId: string) {
+  try {
+    await deleteDoc(doc(db, 'staff', staffId));
+  } catch (error) {
+    handleFirestoreError(error, OperationType.DELETE, `staff/${staffId}`);
+  }
+}
+
+export async function dbDeleteClass(classId: string) {
+  try {
+    await deleteDoc(doc(db, 'classes', classId));
+  } catch (error) {
+    handleFirestoreError(error, OperationType.DELETE, `classes/${classId}`);
+  }
+}
+
+export async function dbDeleteStudent(studentId: string) {
+  try {
+    await deleteDoc(doc(db, 'students', studentId));
+  } catch (error) {
+    handleFirestoreError(error, OperationType.DELETE, `students/${studentId}`);
   }
 }

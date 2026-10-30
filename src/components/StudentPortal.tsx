@@ -33,7 +33,8 @@ export default function StudentPortal({
   const selectedStudentId = propSelectedStudentId !== undefined ? propSelectedStudentId : localSelectedStudentId;
   const setSelectedStudentId = onSelectStudent !== undefined ? onSelectStudent : setLocalSelectedStudentId;
 
-  // Student profile edit form state
+  // Mode Consultation (Admin vs Parent)
+  const [viewMode, setViewMode] = useState<'admin' | 'parent'>('admin');
   const [isEditingProfile, setIsEditingProfile] = useState(false);
   const [editFirstName, setEditFirstName] = useState('');
   const [editLastName, setEditLastName] = useState('');
@@ -264,13 +265,39 @@ export default function StudentPortal({
       <div className="bg-white rounded-2xl border border-slate-200 p-6 shadow-sm">
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
           <div>
+            <div className="flex items-center space-x-2 mb-2">
+              <button
+                onClick={() => setViewMode('admin')}
+                className={`px-3 py-1 rounded-lg text-xs font-bold border transition-all cursor-pointer ${
+                  viewMode === 'admin'
+                    ? 'bg-slate-900 text-white border-slate-900 shadow-sm'
+                    : 'bg-slate-50 text-slate-600 border-slate-200 hover:bg-slate-100'
+                }`}
+              >
+                Vue Administration
+              </button>
+              <button
+                onClick={() => setViewMode('parent')}
+                className={`px-3 py-1 rounded-lg text-xs font-bold border transition-all cursor-pointer ${
+                  viewMode === 'parent'
+                    ? 'bg-rose-600 text-white border-rose-600 shadow-sm'
+                    : 'bg-slate-50 text-slate-600 border-slate-200 hover:bg-slate-100'
+                }`}
+              >
+                Espace Parents d'Élèves
+              </button>
+            </div>
             <div className="flex items-center space-x-2 text-blue-600 text-xs font-mono font-bold uppercase tracking-wider mb-1">
               <User className="h-4 w-4" />
-              <span>Espace Consultatif Personnel</span>
+              <span>{viewMode === 'parent' ? 'Espace Consultation Parentale Sécurisé' : 'Espace Consultatif Personnel'}</span>
             </div>
-            <h2 className="text-2xl font-display font-bold text-slate-800">Portail Élève & Famille</h2>
+            <h2 className="text-2xl font-display font-bold text-slate-800">
+              {viewMode === 'parent' ? `Portail Famille : Tuteur ${student.parentName}` : 'Portail Élève & Famille'}
+            </h2>
             <p className="text-sm text-slate-500 mt-1">
-              Consultez les moyennes, l'évolution des performances scolaires et l'assiduité en temps réel.
+              {viewMode === 'parent' 
+                ? `Accès direct aux notes de votre enfant ${student.firstName} ${student.lastName} (${sClass?.name}), aux appréciations des professeurs et aux alertes de présence.`
+                : 'Consultez les moyennes, l\'évolution des performances scolaires et l\'assiduité en temps réel.'}
             </p>
           </div>
           

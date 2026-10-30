@@ -14,6 +14,9 @@ import ApiDocs from './components/ApiDocs';
 import SuperAdminModule from './components/SuperAdminModule';
 import LoginModule from './components/LoginModule';
 import UserGuideModal from './components/UserGuideModal';
+import AcademicStructureModule from './components/AcademicStructureModule';
+import StudentEnrollmentModule from './components/StudentEnrollmentModule';
+import RolesManagementModule from './components/RolesManagementModule';
 
 import {
   seedDatabaseIfEmpty,
@@ -26,7 +29,19 @@ import {
   dbSaveRecord,
   dbSaveEvaluation,
   dbSaveMark,
-  dbSaveAuditLog
+  dbSaveAuditLog,
+  dbSaveSubject,
+  dbDeleteSubject,
+  dbSaveTeacher,
+  dbDeleteTeacher,
+  dbSaveClassSubject,
+  dbDeleteClassSubject,
+  dbSaveRole,
+  dbDeleteRole,
+  dbSaveStaff,
+  dbDeleteStaff,
+  dbDeleteClass,
+  dbDeleteStudent
 } from './lib/firebaseSync';
 
 import {
@@ -37,10 +52,28 @@ import {
   STUDENTS,
   CLASSES,
   SUBJECTS,
-  INITIAL_SCHOOLS
+  INITIAL_SCHOOLS,
+  TEACHERS,
+  CLASS_SUBJECTS,
+  INITIAL_ROLES,
+  INITIAL_STAFF
 } from './data/mockData';
 
-import { AttendanceSheet, AttendanceRecord, Evaluation, Mark, SchoolTenant, SchoolClass, Student, AuditLog } from './types';
+import { 
+  AttendanceSheet, 
+  AttendanceRecord, 
+  Evaluation, 
+  Mark, 
+  SchoolTenant, 
+  SchoolClass, 
+  Student, 
+  AuditLog,
+  Subject,
+  Teacher,
+  ClassSubject,
+  AdminRole,
+  StaffMember
+} from './types';
 import { Calendar, Bell, Search, GraduationCap, Clock, CheckCircle, BookOpen, Users, FileText, Menu, X, HelpCircle } from 'lucide-react';
 import { generateShades, DEFAULT_PALETTES } from './utils/colorUtils';
 import { motion, AnimatePresence } from 'motion/react';
@@ -54,8 +87,9 @@ export default function App() {
   const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
   const [currentUser, setCurrentUser] = useState<{
     email: string;
-    role: 'superadmin' | 'school_admin';
+    role: string;
     schoolId?: string;
+    studentId?: string;
   } | null>(null);
 
   const userEmail = currentUser?.email || 'visiteur@minesec.gov.cm';
@@ -78,6 +112,15 @@ export default function App() {
   const [students, rawSetStudents] = useState<Student[]>(() => {
     return STUDENTS.map(s => ({ ...s, schoolId: 'school-lby' }));
   });
+
+  // Subjects, Teachers, and ClassSubject Assignments
+  const [subjects, rawSetSubjects] = useState<Subject[]>(SUBJECTS);
+  const [teachers, rawSetTeachers] = useState<Teacher[]>(TEACHERS);
+  const [classSubjects, rawSetClassSubjects] = useState<ClassSubject[]>(CLASS_SUBJECTS);
+
+  // Administrative Roles and Staff Members
+  const [roles, rawSetRoles] = useState<AdminRole[]>(INITIAL_ROLES);
+  const [staff, rawSetStaff] = useState<StaffMember[]>(INITIAL_STAFF);
 
   // Centralized Audit Log State
   const [auditLogs, rawSetAuditLogs] = useState<AuditLog[]>([]);
@@ -110,11 +153,122 @@ export default function App() {
           dbSaveClass(c);
         }
       });
+      prev.forEach((p) => {
+        if (!next.find((c) => c.id === p.id)) {
+          dbDeleteClass(p.id);
+        }
+      });
       return next;
     });
   };
 
   const setStudents = (value: React.SetStateAction<Student[]>) => {
+    rawSetStudents((prev) => {
+      const next = typeof value === 'function' ? value(prev) : value;
+      next.forEach((s) => {
+        const prevStud = prev.find((p) => p.id === s.id);
+        if (JSON.stringify(prevStud) !== JSON.stringify(s)) {
+          dbSaveStudent(s);
+        }
+      });
+      prev.forEach((p) => {
+        if (!next.find((s) => s.id === p.id)) {
+          dbDeleteStudent(p.id);
+        }
+      });
+      return next;
+    });
+  };
+
+  const setSubjects = (value: React.SetStateAction<Subject[]>) => {
+    rawSetSubjects((prev) => {
+      const next = typeof value === 'function' ? value(prev) : value;
+      next.forEach((s) => {
+        const prevSub = prev.find((p) => p.id === s.id);
+        if (JSON.stringify(prevSub) !== JSON.stringify(s)) {
+          dbSaveSubject(s);
+        }
+      });
+      prev.forEach((p) => {
+        if (!next.find((s) => s.id === p.id)) {
+          dbDeleteSubject(p.id);
+        }
+      });
+      return next;
+    });
+  };
+
+  const setTeachers = (value: React.SetStateAction<Teacher[]>) => {
+    rawSetTeachers((prev) => {
+      const next = typeof value === 'function' ? value(prev) : value;
+      next.forEach((t) => {
+        const prevTeach = prev.find((p) => p.id === t.id);
+        if (JSON.stringify(prevTeach) !== JSON.stringify(t)) {
+          dbSaveTeacher(t);
+        }
+      });
+      prev.forEach((p) => {
+        if (!next.find((t) => t.id === p.id)) {
+          dbDeleteTeacher(p.id);
+        }
+      });
+      return next;
+    });
+  };
+
+  const setClassSubjects = (value: React.SetStateAction<ClassSubject[]>) => {
+    rawSetClassSubjects((prev) => {
+      const next = typeof value === 'function' ? value(prev) : value;
+      next.forEach((cs) => {
+        const prevCS = prev.find((p) => p.id === cs.id);
+        if (JSON.stringify(prevCS) !== JSON.stringify(cs)) {
+          dbSaveClassSubject(cs);
+        }
+      });
+      prev.forEach((p) => {
+        if (!next.find((cs) => cs.id === p.id)) {
+          dbDeleteClassSubject(p.id);
+        }
+      });
+      return next;
+    });
+  };
+
+  const setRoles = (value: React.SetStateAction<AdminRole[]>) => {
+    rawSetRoles((prev) => {
+      const next = typeof value === 'function' ? value(prev) : value;
+      next.forEach((r) => {
+        const prevR = prev.find((p) => p.id === r.id);
+        if (JSON.stringify(prevR) !== JSON.stringify(r)) {
+          dbSaveRole(r);
+        }
+      });
+      prev.forEach((p) => {
+        if (!next.find((r) => r.id === p.id)) {
+          dbDeleteRole(p.id);
+        }
+      });
+      return next;
+    });
+  };
+
+  const setStaff = (value: React.SetStateAction<StaffMember[]>) => {
+    rawSetStaff((prev) => {
+      const next = typeof value === 'function' ? value(prev) : value;
+      next.forEach((st) => {
+        const prevSt = prev.find((p) => p.id === st.id);
+        if (JSON.stringify(prevSt) !== JSON.stringify(st)) {
+          dbSaveStaff(st);
+        }
+      });
+      prev.forEach((p) => {
+        if (!next.find((st) => st.id === p.id)) {
+          dbDeleteStaff(p.id);
+        }
+      });
+      return next;
+    });
+  };
     rawSetStudents((prev) => {
       const next = typeof value === 'function' ? value(prev) : value;
       next.forEach((s) => {
@@ -231,7 +385,12 @@ export default function App() {
         setRecords: rawSetRecords,
         setEvaluations: rawSetEvaluations,
         setMarks: rawSetMarks,
-        setAuditLogs: rawSetAuditLogs
+        setAuditLogs: rawSetAuditLogs,
+        setSubjects: rawSetSubjects,
+        setTeachers: rawSetTeachers,
+        setClassSubjects: rawSetClassSubjects,
+        setRoles: rawSetRoles,
+        setStaff: rawSetStaff
       });
       
       return unsub;
@@ -344,6 +503,46 @@ export default function App() {
             students={activeStudents}
           />
         );
+      case 'academic':
+        return (
+          <AcademicStructureModule
+            classes={activeClasses}
+            setClasses={setClasses}
+            subjects={subjects}
+            setSubjects={setSubjects}
+            teachers={teachers}
+            setTeachers={setTeachers}
+            classSubjects={classSubjects}
+            setClassSubjects={setClassSubjects}
+            activeSchoolId={activeSchoolId}
+            activeSchool={activeSchool}
+            addAuditLog={addAuditLog}
+          />
+        );
+      case 'enrollment':
+        return (
+          <StudentEnrollmentModule
+            students={activeStudents}
+            setStudents={setStudents}
+            classes={activeClasses}
+            setClasses={setClasses}
+            activeSchoolId={activeSchoolId}
+            activeSchool={activeSchool}
+            addAuditLog={addAuditLog}
+          />
+        );
+      case 'roles':
+        return (
+          <RolesManagementModule
+            roles={roles}
+            setRoles={setRoles}
+            staff={staff}
+            setStaff={setStaff}
+            activeSchoolId={activeSchoolId}
+            activeSchool={activeSchool}
+            addAuditLog={addAuditLog}
+          />
+        );
       case 'attendance':
         return (
           <AttendanceModule
@@ -371,6 +570,8 @@ export default function App() {
             onSelectEval={setSelectedEvalId}
             classes={activeClasses}
             students={activeStudents}
+            subjects={subjects}
+            teachers={teachers}
             activeSchoolId={activeSchoolId}
             addAuditLog={addAuditLog}
           />
@@ -507,6 +708,17 @@ export default function App() {
           }
           if (user.role === 'superadmin') {
             setCurrentTab('superadmin');
+          } else if (user.role === 'parent') {
+            if (user.studentId) {
+              setSelectedStudentId(user.studentId);
+            }
+            setCurrentTab('portal');
+          } else if (user.role === 'enseignant') {
+            setCurrentTab('grades');
+          } else if (user.role === 'secretaire') {
+            setCurrentTab('enrollment');
+          } else if (user.role === 'surveillant_general') {
+            setCurrentTab('attendance');
           } else {
             setCurrentTab('dashboard');
           }

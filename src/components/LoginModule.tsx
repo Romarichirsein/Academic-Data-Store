@@ -17,8 +17,9 @@ interface LoginModuleProps {
   schools: SchoolTenant[];
   onLoginSuccess: (user: {
     email: string;
-    role: 'superadmin' | 'school_admin';
+    role: string;
     schoolId?: string;
+    studentId?: string;
   }) => void;
 }
 
@@ -42,14 +43,65 @@ export default function LoginModule({ schools, onLoginSuccess }: LoginModuleProp
       badge: 'Plateforme'
     },
     {
-      label: 'Admin - Lycée Bilingue de Yaoundé',
+      label: 'Admin / Proviseur - Lycée Bilingue de Yaoundé',
       email: 'lby@academic.cm',
       username: 'lby',
       password: 'lby',
       role: 'school_admin' as const,
       schoolId: 'school-lby',
-      details: 'Limité au LBY uniquement (Thème Bleu)',
-      badge: 'Établissement'
+      details: 'Direction d\'établissement (Thème Bleu)',
+      badge: 'Proviseur'
+    },
+    {
+      label: 'Secrétaire - Inscriptions & Classes',
+      email: 'secretariat@lbyaounde.cm',
+      username: 'secretaire',
+      password: 'lby',
+      role: 'secretaire' as const,
+      schoolId: 'school-lby',
+      details: 'Gestion des inscriptions & répartition élèves',
+      badge: 'Secrétaire'
+    },
+    {
+      label: 'Surveillant Général - Présences & Discipline',
+      email: 'surveillant@lbyaounde.cm',
+      username: 'surveillant',
+      password: 'lby',
+      role: 'surveillant_general' as const,
+      schoolId: 'school-lby',
+      details: 'Contrôle des absences, retards et discipline',
+      badge: 'Surveillant'
+    },
+    {
+      label: 'Économe - Gestion & Finances',
+      email: 'economat@lbyaounde.cm',
+      username: 'econome',
+      password: 'lby',
+      role: 'econome' as const,
+      schoolId: 'school-lby',
+      details: 'Intendance, finances et matériels scolaires',
+      badge: 'Économe'
+    },
+    {
+      label: 'Enseignant - Saisie des Notes & Cours',
+      email: 'jm.kamga@academic.cm',
+      username: 'prof',
+      password: 'lby',
+      role: 'enseignant' as const,
+      schoolId: 'school-lby',
+      details: 'M. Jean-Marc Kamga (Mathématiques & Informatique)',
+      badge: 'Professeur'
+    },
+    {
+      label: 'Parent d\'Élève - Consultation des Notes',
+      email: 'etoo.parent@gmail.com',
+      username: 'parent',
+      password: 'lby',
+      role: 'parent' as const,
+      schoolId: 'school-lby',
+      studentId: 'stud-tc-1',
+      details: 'M. Samuel Eto\'o Sr. (Tuteur de Samuel Eto\'o Fils)',
+      badge: 'Parent Tuteur'
     },
     {
       label: 'Admin - Collège Jean-Tabi / Vogt',

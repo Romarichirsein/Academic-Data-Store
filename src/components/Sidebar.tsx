@@ -14,7 +14,11 @@ import {
   GraduationCap,
   LogOut,
   Building2,
-  HelpCircle
+  HelpCircle,
+  Layers,
+  UserPlus,
+  ShieldAlert,
+  Users
 } from 'lucide-react';
 import { SchoolTenant } from '../types';
 
@@ -26,7 +30,7 @@ interface SidebarProps {
   schools: SchoolTenant[];
   setActiveSchoolId: (id: string) => void;
   onCloseMobile?: () => void;
-  currentUserRole?: 'superadmin' | 'school_admin';
+  currentUserRole?: string;
   onLogout?: () => void;
   onOpenGuide?: () => void;
 }
@@ -45,10 +49,13 @@ export default function Sidebar({
 }: SidebarProps) {
   const rawMenuItems = [
     { id: 'dashboard', name: 'Tableau de bord', icon: LayoutDashboard },
+    { id: 'academic', name: 'Classes & Matières & Profs', icon: Layers },
+    { id: 'enrollment', name: 'Inscriptions & Répartition', icon: UserPlus },
+    { id: 'roles', name: 'Rôles Administratifs & Staff', icon: Users },
     { id: 'attendance', name: 'Gestion des Présences', icon: CalendarDays },
     { id: 'grades', name: 'Gestion des Notes', icon: FileText },
     { id: 'admin', name: 'Administration & Bulletins', icon: ShieldCheck },
-    { id: 'portal', name: 'Portail Élève & Parent', icon: User },
+    { id: 'portal', name: 'Espace Élève & Parent', icon: User },
     { id: 'superadmin', name: 'Super Admin Multi-Écoles', icon: Building2 },
     { id: 'architecture', name: 'Architecture & API REST', icon: Database },
   ];

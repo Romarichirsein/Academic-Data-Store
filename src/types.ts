@@ -136,3 +136,82 @@ export interface AuditLog {
   user: string;
 }
 
+// ====== RBAC Role Management ======
+
+export type AdminRoleType =
+  | 'proviseur'
+  | 'censeur'
+  | 'surveillant_general'
+  | 'secretaire'
+  | 'econome'
+  | 'intendant'
+  | 'enseignant'
+  | 'parent';
+
+export interface AdminRole {
+  id: string;
+  type: AdminRoleType;
+  label: string;
+  description: string;
+  permissions: string[];
+  schoolId: string;
+}
+
+export interface StaffMember {
+  id: string;
+  name: string;
+  email: string;
+  phone: string;
+  roleId: string;
+  roleType: AdminRoleType;
+  schoolId: string;
+  teacherId?: string; // link to Teacher if role is 'enseignant'
+  studentIds?: string[]; // link to children if role is 'parent'
+  isActive: boolean;
+}
+
+// ====== Default role permissions map ======
+
+export const DEFAULT_ROLE_PERMISSIONS: Record<AdminRoleType, { label: string; description: string; permissions: string[] }> = {
+  proviseur: {
+    label: 'Proviseur / Directeur',
+    description: 'Responsable général de l\'établissement',
+    permissions: ['all', 'manage_staff', 'manage_classes', 'manage_subjects', 'manage_teachers', 'manage_students', 'view_grades', 'validate_grades', 'view_attendance', 'view_audit', 'manage_roles']
+  },
+  censeur: {
+    label: 'Censeur',
+    description: 'Responsable pédagogique, valide les notes',
+    permissions: ['manage_classes', 'manage_subjects', 'manage_teachers', 'view_grades', 'validate_grades', 'view_attendance', 'view_audit']
+  },
+  surveillant_general: {
+    label: 'Surveillant Général',
+    description: 'Responsable de la discipline et des absences',
+    permissions: ['view_classes', 'view_students', 'manage_attendance', 'view_audit']
+  },
+  secretaire: {
+    label: 'Secrétaire',
+    description: 'Gestion administrative et inscriptions',
+    permissions: ['manage_students', 'manage_classes', 'view_grades', 'view_attendance']
+  },
+  econome: {
+    label: 'Économe / Intendant',
+    description: 'Gestion financière et matérielle',
+    permissions: ['view_students', 'view_classes', 'view_audit']
+  },
+  intendant: {
+    label: 'Intendant',
+    description: 'Gestion des ressources et du patrimoine',
+    permissions: ['view_students', 'view_classes']
+  },
+  enseignant: {
+    label: 'Enseignant',
+    description: 'Saisie des notes et des présences pour ses classes',
+    permissions: ['enter_grades', 'enter_attendance', 'view_own_classes']
+  },
+  parent: {
+    label: 'Parent / Tuteur',
+    description: 'Consultation des notes et absences de son enfant',
+    permissions: ['view_child_grades', 'view_child_attendance']
+  }
+};
+

@@ -15,7 +15,10 @@ import {
   Mark,
   Sequence,
   Term,
-  SchoolTenant
+  SchoolTenant,
+  AdminRole,
+  StaffMember,
+  DEFAULT_ROLE_PERMISSIONS
 } from '../types';
 
 export const TERMS: Term[] = [
@@ -407,4 +410,147 @@ export const INITIAL_SCHOOLS: SchoolTenant[] = [
     licenseStatus: 'Expired'
   }
 ];
+
+export const INITIAL_ROLES: AdminRole[] = [
+  {
+    id: 'role-proviseur',
+    type: 'proviseur',
+    label: DEFAULT_ROLE_PERMISSIONS.proviseur.label,
+    description: DEFAULT_ROLE_PERMISSIONS.proviseur.description,
+    permissions: DEFAULT_ROLE_PERMISSIONS.proviseur.permissions,
+    schoolId: 'school-lby'
+  },
+  {
+    id: 'role-censeur',
+    type: 'censeur',
+    label: DEFAULT_ROLE_PERMISSIONS.censeur.label,
+    description: DEFAULT_ROLE_PERMISSIONS.censeur.description,
+    permissions: DEFAULT_ROLE_PERMISSIONS.censeur.permissions,
+    schoolId: 'school-lby'
+  },
+  {
+    id: 'role-surveillant',
+    type: 'surveillant_general',
+    label: DEFAULT_ROLE_PERMISSIONS.surveillant_general.label,
+    description: DEFAULT_ROLE_PERMISSIONS.surveillant_general.description,
+    permissions: DEFAULT_ROLE_PERMISSIONS.surveillant_general.permissions,
+    schoolId: 'school-lby'
+  },
+  {
+    id: 'role-secretaire',
+    type: 'secretaire',
+    label: DEFAULT_ROLE_PERMISSIONS.secretaire.label,
+    description: DEFAULT_ROLE_PERMISSIONS.secretaire.description,
+    permissions: DEFAULT_ROLE_PERMISSIONS.secretaire.permissions,
+    schoolId: 'school-lby'
+  },
+  {
+    id: 'role-econome',
+    type: 'econome',
+    label: DEFAULT_ROLE_PERMISSIONS.econome.label,
+    description: DEFAULT_ROLE_PERMISSIONS.econome.description,
+    permissions: DEFAULT_ROLE_PERMISSIONS.econome.permissions,
+    schoolId: 'school-lby'
+  },
+  {
+    id: 'role-intendant',
+    type: 'intendant',
+    label: DEFAULT_ROLE_PERMISSIONS.intendant.label,
+    description: DEFAULT_ROLE_PERMISSIONS.intendant.description,
+    permissions: DEFAULT_ROLE_PERMISSIONS.intendant.permissions,
+    schoolId: 'school-lby'
+  },
+  {
+    id: 'role-enseignant',
+    type: 'enseignant',
+    label: DEFAULT_ROLE_PERMISSIONS.enseignant.label,
+    description: DEFAULT_ROLE_PERMISSIONS.enseignant.description,
+    permissions: DEFAULT_ROLE_PERMISSIONS.enseignant.permissions,
+    schoolId: 'school-lby'
+  },
+  {
+    id: 'role-parent',
+    type: 'parent',
+    label: DEFAULT_ROLE_PERMISSIONS.parent.label,
+    description: DEFAULT_ROLE_PERMISSIONS.parent.description,
+    permissions: DEFAULT_ROLE_PERMISSIONS.parent.permissions,
+    schoolId: 'school-lby'
+  }
+];
+
+export const INITIAL_STAFF: StaffMember[] = [
+  {
+    id: 'staff-1',
+    name: 'Dr. Ahmadou Bello',
+    email: 'proviseur@lbyaounde.cm',
+    phone: '+237 670 11 22 33',
+    roleId: 'role-proviseur',
+    roleType: 'proviseur',
+    schoolId: 'school-lby',
+    isActive: true
+  },
+  {
+    id: 'staff-2',
+    name: 'M. Jean-Paul Mbarga',
+    email: 'censeur@lbyaounde.cm',
+    phone: '+237 691 44 55 66',
+    roleId: 'role-censeur',
+    roleType: 'censeur',
+    schoolId: 'school-lby',
+    isActive: true
+  },
+  {
+    id: 'staff-3',
+    name: 'Mme Christine Ngo Bassong',
+    email: 'surveillant@lbyaounde.cm',
+    phone: '+237 655 77 88 99',
+    roleId: 'role-surveillant',
+    roleType: 'surveillant_general',
+    schoolId: 'school-lby',
+    isActive: true
+  },
+  {
+    id: 'staff-4',
+    name: 'Mme Suzanne Ndongo',
+    email: 'secretariat@lbyaounde.cm',
+    phone: '+237 679 23 45 67',
+    roleId: 'role-secretaire',
+    roleType: 'secretaire',
+    schoolId: 'school-lby',
+    isActive: true
+  },
+  {
+    id: 'staff-5',
+    name: 'M. Patrick Atangana',
+    email: 'economat@lbyaounde.cm',
+    phone: '+237 698 12 34 56',
+    roleId: 'role-econome',
+    roleType: 'econome',
+    schoolId: 'school-lby',
+    isActive: true
+  },
+  {
+    id: 'staff-6',
+    name: 'M. Jean-Marc Kamga',
+    email: 'jm.kamga@academic.cm',
+    phone: '+237 677 88 99 11',
+    roleId: 'role-enseignant',
+    roleType: 'enseignant',
+    schoolId: 'school-lby',
+    teacherId: 'teach-1',
+    isActive: true
+  },
+  {
+    id: 'staff-7',
+    name: 'M. Samuel Eto\'o Sr.',
+    email: 'etoo.parent@gmail.com',
+    phone: '+237 677 88 99 00',
+    roleId: 'role-parent',
+    roleType: 'parent',
+    schoolId: 'school-lby',
+    studentIds: ['stud-tc-1'],
+    isActive: true
+  }
+];
+
 

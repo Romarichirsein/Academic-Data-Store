@@ -17,6 +17,8 @@ interface GradesModuleProps {
   onSelectEval?: (id: string | null) => void;
   classes?: SchoolClass[];
   students?: Student[];
+  subjects?: Subject[];
+  teachers?: Teacher[];
   activeSchoolId?: string;
   addAuditLog?: (action: string, schoolId: string, details: string) => void;
 }
@@ -30,6 +32,8 @@ export default function GradesModule({
   onSelectEval,
   classes = CLASSES,
   students = STUDENTS,
+  subjects = SUBJECTS,
+  teachers = [],
   activeSchoolId = 'school-lby',
   addAuditLog
 }: GradesModuleProps) {
@@ -349,7 +353,7 @@ export default function GradesModule({
                         onChange={(e) => setNewSubject(e.target.value)}
                         className="w-full bg-slate-50 border border-slate-200 rounded-xl px-2 py-2 text-xs text-slate-700 focus:outline-none"
                       >
-                        {SUBJECTS.map(s => (
+                        {subjects.map(s => (
                           <option key={s.id} value={s.id}>{s.name}</option>
                         ))}
                       </select>
