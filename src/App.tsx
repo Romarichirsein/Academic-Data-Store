@@ -269,17 +269,6 @@ export default function App() {
       return next;
     });
   };
-    rawSetStudents((prev) => {
-      const next = typeof value === 'function' ? value(prev) : value;
-      next.forEach((s) => {
-        const prevStud = prev.find((p) => p.id === s.id);
-        if (JSON.stringify(prevStud) !== JSON.stringify(s)) {
-          dbSaveStudent(s);
-        }
-      });
-      return next;
-    });
-  };
 
   const addAuditLog = (action: string, schoolId: string, details: string, user: string = userEmail) => {
     const schoolObj = schools.find(s => s.id === schoolId);
