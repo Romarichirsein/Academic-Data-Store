@@ -132,6 +132,16 @@ export default function LoginModule({ schools, onLoginSuccess }: LoginModuleProp
       schoolId: 'school-lsd',
       details: 'Limité au LSD uniquement (Thème Rose)',
       badge: 'Établissement'
+    },
+    {
+      label: 'Admin - Collège Fako',
+      email: 'collegefako@gmail.com',
+      username: 'collegefako',
+      password: 'fako2026',
+      role: 'school_admin' as const,
+      schoolId: 'school-fako',
+      details: 'Direction du Collège Fako (Thème Ambre)',
+      badge: 'Établissement'
     }
   ];
 
@@ -191,7 +201,9 @@ export default function LoginModule({ schools, onLoginSuccess }: LoginModuleProp
     } catch (error: any) {
       console.error("Firebase auth error:", error);
       setIsLoading(false);
-      if (error.code === 'auth/user-not-found' || error.code === 'auth/wrong-password' || error.code === 'auth/invalid-credential') {
+      if (error.code === 'auth/network-request-failed') {
+        setErrorMessage('Connexion au serveur impossible. Vérifiez votre connexion Internet ou utilisez un compte de démonstration ci-dessous.');
+      } else if (error.code === 'auth/user-not-found' || error.code === 'auth/wrong-password' || error.code === 'auth/invalid-credential') {
         setErrorMessage('Identifiant ou mot de passe incorrect. Veuillez vérifier vos accès.');
       } else if (error.code === 'auth/email-already-in-use') {
         setErrorMessage('Cet email est déjà associé à un compte utilisateur.');

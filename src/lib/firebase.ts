@@ -18,7 +18,14 @@ const firebaseConfig = {
 
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
-const db = initializeFirestore(app, {}, "ai-studio-academicdatastor-70e5e4dd-682c-4b6e-84e4-ebc88e3fdf52");
+
+// Configure auth settings for better network resilience
+auth.useDeviceLanguage();
+
+const db = initializeFirestore(app, {
+  experimentalForceLongPolling: true,
+  cacheSizeBytes: 50 * 1024 * 1024 // 50MB cache for offline support
+}, "ai-studio-academicdatastor-70e5e4dd-682c-4b6e-84e4-ebc88e3fdf52");
 const googleProvider = new GoogleAuthProvider();
 
 export { app, auth, db, googleProvider };

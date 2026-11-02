@@ -408,6 +408,22 @@ export const INITIAL_SCHOOLS: SchoolTenant[] = [
     activeSchoolYear: '2025-2026',
     systemVersion: 'v2.3.9',
     licenseStatus: 'Expired'
+  },
+  {
+    id: 'school-fako',
+    name: 'Collège Fako',
+    slogan: 'Savoir - Discipline - Réussite',
+    logoEmoji: '🎓',
+    primaryColor: 'amber',
+    themePrimary: '#f59e0b',
+    themeSecondary: '#1c1917',
+    themeAccent: '#d97706',
+    address: 'Fako, Région du Sud-Ouest, Cameroun',
+    phone: '+237 6XX XX XX XX',
+    email: 'collegefako@gmail.com',
+    activeSchoolYear: '2025-2026',
+    systemVersion: 'v2.5.0',
+    licenseStatus: 'Active'
   }
 ];
 
