@@ -37,9 +37,12 @@ export const SEQUENCES: Sequence[] = [
 ];
 
 export const CLASSES: SchoolClass[] = [
-  { id: 'class-tc', name: 'Terminale C', level: 'Lycée', studentCount: 12 },
-  { id: 'class-td', name: 'Terminale D', level: 'Lycée', studentCount: 10 },
-  { id: 'class-3e', name: '3ème Allemand', level: 'Collège', studentCount: 10 }
+  { id: 'class-tc', name: 'Terminale C', level: 'Lycée', studentCount: 12, schoolId: 'school-lby' },
+  { id: 'class-td', name: 'Terminale D', level: 'Lycée', studentCount: 10, schoolId: 'school-lby' },
+  { id: 'class-3e', name: '3ème Allemand', level: 'Collège', studentCount: 10, schoolId: 'school-lby' },
+  { id: 'class-fapo-6e', name: '6ème Moderne', level: 'Collège', studentCount: 28, schoolId: 'school-fapo' },
+  { id: 'class-fapo-3e', name: '3ème Espagnol', level: 'Collège', studentCount: 22, schoolId: 'school-fapo' },
+  { id: 'class-fapo-tlec', name: 'Terminale C', level: 'Lycée', studentCount: 18, schoolId: 'school-fapo' }
 ];
 
 export const SUBJECTS: Subject[] = [
@@ -124,7 +127,11 @@ export const STUDENTS: Student[] = [
   { id: 'stud-3e-7', classId: 'class-3e', firstName: 'Karl', lastName: 'Toko Ekambi', gender: 'M', parentName: 'M. Toko Charles', parentPhone: '+237 651 78 78 78' },
   { id: 'stud-3e-8', classId: 'class-3e', firstName: 'Rosalie', lastName: 'Atangana', gender: 'F', parentName: 'M. Atangana Pierre', parentPhone: '+237 694 89 89 89' },
   { id: 'stud-3e-9', classId: 'class-3e', firstName: 'Cédric', lastName: 'Mongoung', gender: 'M', parentName: 'Mme Mongoung Alice', parentPhone: '+237 670 90 90 90' },
-  { id: 'stud-3e-10', classId: 'class-3e', firstName: 'Gabrielle', lastName: 'Biko', gender: 'F', parentName: 'M. Biko Robert', parentPhone: '+237 692 01 01 01' }
+  { id: 'stud-3e-10', classId: 'class-3e', firstName: 'Gabrielle', lastName: 'Biko', gender: 'F', parentName: 'M. Biko Robert', parentPhone: '+237 692 01 01 01', schoolId: 'school-lby' },
+  // Collège Fapo
+  { id: 'stud-fapo-1', classId: 'class-fapo-tlec', firstName: 'Paul', lastName: 'Kamto', gender: 'M', parentName: 'M. Kamto Ernest', parentPhone: '+237 671 23 45 67', parentEmail: 'kamto.parent@gmail.com', schoolId: 'school-fapo' },
+  { id: 'stud-fapo-2', classId: 'class-fapo-tlec', firstName: 'Christelle', lastName: 'Fotso', gender: 'F', parentName: 'Mme Fotso Claire', parentPhone: '+237 699 87 65 43', parentEmail: 'fotso.claire@gmail.com', schoolId: 'school-fapo' },
+  { id: 'stud-fapo-3', classId: 'class-fapo-3e', firstName: 'Alain', lastName: 'Nguema', gender: 'M', parentName: 'M. Nguema Paul', parentPhone: '+237 655 12 34 56', parentEmail: 'nguema.famille@gmail.com', schoolId: 'school-fapo' }
 ];
 
 // Prepopulated Attendance Sheets (Last few days of June 2026)
@@ -421,6 +428,22 @@ export const INITIAL_SCHOOLS: SchoolTenant[] = [
     address: 'Fako, Région du Sud-Ouest, Cameroun',
     phone: '+237 6XX XX XX XX',
     email: 'collegefako@gmail.com',
+    activeSchoolYear: '2025-2026',
+    systemVersion: 'v2.5.0',
+    licenseStatus: 'Active'
+  },
+  {
+    id: 'school-fapo',
+    name: 'Collège Fapo',
+    slogan: 'Discipline - Rigueur - Réussite',
+    logoEmoji: '🏫',
+    primaryColor: 'emerald',
+    themePrimary: '#10b981',
+    themeSecondary: '#064e3b',
+    themeAccent: '#3b82f6',
+    address: 'Fapo, Région du Centre, Cameroun',
+    phone: '+237 650 00 11 22',
+    email: 'collegefapo@gmail.com',
     activeSchoolYear: '2025-2026',
     systemVersion: 'v2.5.0',
     licenseStatus: 'Active'

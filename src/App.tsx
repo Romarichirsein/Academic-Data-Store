@@ -107,10 +107,10 @@ export default function App() {
 
   // Dynamically managed classes and students (synchronized with Firestore)
   const [classes, rawSetClasses] = useState<SchoolClass[]>(() => {
-    return CLASSES.map(c => ({ ...c, schoolId: 'school-lby' }));
+    return CLASSES.map(c => ({ ...c, schoolId: c.schoolId || 'school-lby' }));
   });
   const [students, rawSetStudents] = useState<Student[]>(() => {
-    return STUDENTS.map(s => ({ ...s, schoolId: 'school-lby' }));
+    return STUDENTS.map(s => ({ ...s, schoolId: s.schoolId || 'school-lby' }));
   });
 
   // Subjects, Teachers, and ClassSubject Assignments

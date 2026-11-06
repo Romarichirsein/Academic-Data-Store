@@ -142,6 +142,16 @@ export default function LoginModule({ schools, onLoginSuccess }: LoginModuleProp
       schoolId: 'school-fako',
       details: 'Direction du Collège Fako (Thème Ambre)',
       badge: 'Établissement'
+    },
+    {
+      label: 'Admin - Collège Fapo',
+      email: 'collegefapo@gmail.com',
+      username: 'collegefapo',
+      password: 'fapo2026',
+      role: 'school_admin' as const,
+      schoolId: 'school-fapo',
+      details: 'Direction du Collège Fapo (Thème Émeraude)',
+      badge: 'Établissement'
     }
   ];
 
@@ -184,7 +194,7 @@ export default function LoginModule({ schools, onLoginSuccess }: LoginModuleProp
         onLoginSuccess({
           email: user.email || identifier.trim(),
           role: 'school_admin',
-          schoolId: 'school-lby'
+          schoolId: (user.email || identifier.trim()).toLowerCase().includes('fapo') ? 'school-fapo' : (user.email || identifier.trim()).toLowerCase().includes('fako') ? 'school-fako' : 'school-lby'
         });
       } else {
         const userCredential = await signInWithEmailAndPassword(auth, identifier.trim(), password);
@@ -195,7 +205,7 @@ export default function LoginModule({ schools, onLoginSuccess }: LoginModuleProp
         onLoginSuccess({
           email,
           role,
-          schoolId: 'school-lby'
+          schoolId: email.toLowerCase().includes('fapo') ? 'school-fapo' : email.toLowerCase().includes('fako') ? 'school-fako' : 'school-lby'
         });
       }
     } catch (error: any) {
